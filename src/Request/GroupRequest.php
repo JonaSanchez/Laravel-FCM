@@ -38,12 +38,14 @@ class GroupRequest extends BaseRequest
     /**
      * GroupRequest constructor.
      *
-     * @param $operation
-     * @param $notificationKeyName
-     * @param $notificationKey
-     * @param $registrationIds
+     * @param                   $operation
+     * @param                   $notificationKeyName
+     * @param                   $notificationKey
+     * @param                   $registrationIds
+     * @param   string|null     $server_key // overwrites the one in .env file
+     * @param   string|null     $sender_id  // overwrites the one in .env file
      */
-    public function __construct($operation, $notificationKeyName, $notificationKey, $registrationIds)
+    public function __construct($operation, $notificationKeyName, $notificationKey, $registrationIds, $server_key = null, $sender_id = null)
     {
         parent::__construct();
 
@@ -51,6 +53,12 @@ class GroupRequest extends BaseRequest
         $this->notificationKeyName = $notificationKeyName;
         $this->notificationKey = $notificationKey;
         $this->registrationIds = $registrationIds;
+
+        // If $server_key and $sender_id are passed, overwrite the ones in config
+        // allows for multiple senders
+        if ($server_key && $sender_id) {
+            $this->overwriteServerKeyAndSenderId($server_key, $sender_id);
+        }
     }
 
     /**
